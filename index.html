@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>two-weeks deliverable</title>
+</head>
+
+<style>
+    html {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-size: 100%;
+    }
+
+    .distance {
+        display: block;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .distance h1 {
+        font-size: 1.8rem;
+    }
+</style>
+
+<body>
+    <div class="distance">
+        <h1>How far away are you?</h1>
+        <p id="white-house">Distance from the White House: </p>
+        <p id="gershwin">Distance from the Gershwin on Broadway: </p>
+        <p id="disney-world">Distance from Disney World: </p>
+        <p id="alamo">Distance from the Alamo: </p>
+        <p id="cecil-hotel">Distance from the Cecil Hotel: </p>
+        <p id="machu-picchu">Distance from Machu Picchu: </p>
+        <p id="eiffel-tower">Distance from the Eiffel Tower: </p>
+        <input type="button" value="Calculate!" onclick="myFunction()" />
+    </div>
+
+    <script>
+        let distance = document.querySelector('.distance');
+        let allParas = distance.querySelectorAll('p');
+        async function myFunction() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                newP = document.createElement('p');
+                newP.innerHTML = 'Geolocation is not supported by this browser.';
+                distance.append(newP);
+            }
+        }
+
+        async function showPosition(position) {
+            data = await postData('https://bdjhif.deta.dev/coords/', {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            });
+
+            allParas[0].innerHTML += '<br>' + data[allParas[0].id] + ' miles';
+            allParas[1].innerHTML += '<br>' + data[allParas[1].id] + ' miles';
+            allParas[2].innerHTML += '<br>' + data[allParas[2].id] + ' miles';
+            allParas[3].innerHTML += '<br>' + data[allParas[3].id] + ' miles';
+            allParas[4].innerHTML += '<br>' + data[allParas[4].id] + ' miles';
+            allParas[5].innerHTML += '<br>' + data[allParas[5].id] + ' miles';
+            allParas[6].innerHTML += '<br>' + data[allParas[6].id] + ' miles';
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    newP = document.createElement('p');
+                    newP.innerHTML = 'User denied the request for geolocation.';
+                    distance.append(newP);
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    newP = document.createElement('p');
+                    newP.innerHTML = 'Location information is unavailable.';
+                    distance.append(newP);
+                    break;
+                case error.TIMEOUT:
+                    newP = document.createElement('p');
+                    newP.innerHTML = 'The request to get user location timed out.';
+                    distance.append(newP);
+                    break;
+            }
+        }
+
+        async function postData(url = '', data = {}) {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+    </script>
+</body>
+
+</html>

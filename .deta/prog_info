@@ -1,0 +1,1 @@
+{"id":"d6d9c742-82c6-40d1-a5c8-5a684f63876f","space":48662,"runtime":"python3.9","name":"two-weeks","path":"bdjhif","project":"b0hllwnw","account":"144798365827","region":"us-east-1","deps":["fastapi","haversine","pydantic"],"envs":null,"public":false,"log_level":"off","cron":""}
